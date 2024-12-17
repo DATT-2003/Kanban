@@ -3,12 +3,14 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SocialLogin from './components/SocialLogin'
 import handleAPI from '../../apis/handleAPI'
+import { addAuth } from '../../redux/reducers/authReducer'
+import { useDispatch } from 'react-redux'
+import { localDataNames } from '../../constants/appinfor'
 
 const { Title, Paragraph, Text } = Typography
 const SignUp = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [isRemember, setIsRemember] = useState(false);
-
+    const dispatch = useDispatch()
     const [from] = Form.useForm()
     const handleSignUp = async (values: { email: string; password: string }) => {
 
@@ -16,7 +18,10 @@ const SignUp = () => {
         setIsLoading(true)
         try {
             const res = await handleAPI(api, values, 'post')
-            console.log(res)
+            if (res.data) {
+                localStorage.setItem(localDataNames.authData, JSON.stringify(res.data.data))
+                dispatch(addAuth(res.data.data))
+            }
         } catch (error: any) {
             message.error(error.message)
             console.log(error)

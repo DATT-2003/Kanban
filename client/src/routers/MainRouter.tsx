@@ -1,11 +1,8 @@
 import React from 'react'
+import HomeScreen from '../screens/HomeScreen'
 
 const MainRouter = () => {
-    return (
-        <div>
-            Main100
-        </div>
-    )
+    return <HomeScreen />
 }
 
 export default MainRouter
