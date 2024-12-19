@@ -1,3 +1,3 @@
-export const localDataNames = {
+export const LocalDataNames = {
     'authData': 'authData'
 }

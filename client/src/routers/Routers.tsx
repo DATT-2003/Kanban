@@ -3,11 +3,11 @@ import AuthRouter from './AuthRouter'
 import MainRouter from './MainRouter';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAuth, authSelector, AuthState } from '../redux/reducers/authReducer';
-import { localDataNames } from '../constants/appinfor';
+import { LocalDataNames } from '../constants/appinfor';
 import { Spin } from 'antd';
 
 const Routers = () => {
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const auth: AuthState = useSelector(authSelector)
     const dispatch = useDispatch()
 
@@ -15,7 +15,7 @@ const Routers = () => {
         getData()
     }, [])
     const getData = async () => {
-        const res = localStorage.getItem(localDataNames.authData)
+        const res = localStorage.getItem(LocalDataNames.authData)
         res && dispatch(addAuth(JSON.parse(res)));
     }
     return isLoading ? <Spin /> : !auth.token ? <AuthRouter /> : <MainRouter />

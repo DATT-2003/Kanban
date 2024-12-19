@@ -5,7 +5,7 @@ import SocialLogin from './components/SocialLogin'
 import handleAPI from '../../apis/handleAPI'
 import { addAuth } from '../../redux/reducers/authReducer'
 import { useDispatch } from 'react-redux'
-import { localDataNames } from '../../constants/appinfor'
+import { LocalDataNames } from '../../constants/appinfor'
 
 const { Title, Paragraph, Text } = Typography
 const SignUp = () => {
@@ -19,7 +19,7 @@ const SignUp = () => {
         try {
             const res = await handleAPI(api, values, 'post')
             if (res.data) {
-                localStorage.setItem(localDataNames.authData, JSON.stringify(res.data.data))
+                message.success(res.data.message)
                 dispatch(addAuth(res.data.data))
             }
         } catch (error: any) {
