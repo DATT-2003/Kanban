@@ -20,7 +20,7 @@ const register = async (req: any, res: any) => {
         await newUser.save()
         delete newUser._doc.password;
 
-        newUser.token = res.status(200).json({
+        res.status(200).json({
             message: 'Register',
             data: {
                 ...newUser._doc,
@@ -38,4 +38,33 @@ const register = async (req: any, res: any) => {
         })
     }
 };
-export { register }
+const login = async (req: any, res: any) => {
+    const body = req.body;
+    const { email, password } = body
+    try {
+        const user: any = await UserModel.findOne({ email })
+        if (!user) {
+            throw new Error(`Tài khoản không tồn tại`)
+        }
+
+        delete user._doc.password;
+
+        res.status(200).json({
+            message: 'Đăng nhập thành công',
+            data: {
+                ...user._doc,
+                token: await getAccesstoken({
+                    _id: user._id,
+                    email: user.email,
+                    rule: user.rule ?? 1,
+                }),
+            }
+        });
+
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+};
+export { register, login }

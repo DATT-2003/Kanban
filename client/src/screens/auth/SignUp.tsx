@@ -17,10 +17,10 @@ const SignUp = () => {
         const api = `/auth/register`
         setIsLoading(true)
         try {
-            const res = await handleAPI(api, values, 'post')
+            const res: any = await handleAPI(api, values, 'post')
             if (res.data) {
-                message.success(res.data.message)
-                dispatch(addAuth(res.data.data))
+                message.success(res.message)
+                dispatch(addAuth(res.data))
             }
         } catch (error: any) {
             message.error(error.message)

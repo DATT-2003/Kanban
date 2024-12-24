@@ -1,8 +1,10 @@
-import { Button, Card, Checkbox, Form, Input, Space, Typography } from 'antd'
+import { Button, Card, Checkbox, Form, Input, message, Space, Typography } from 'antd'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SocialLogin from './components/SocialLogin'
 import handleAPI from '../../apis/handleAPI'
+import { addAuth } from '../../redux/reducers/authReducer'
+import { useDispatch } from 'react-redux'
 
 const { Title, Paragraph, Text } = Typography
 const Login = () => {
@@ -10,18 +12,20 @@ const Login = () => {
     const [isRemember, setIsRemember] = useState(false);
 
     const [from] = Form.useForm()
+    const dispatch = useDispatch()
     const handleLogin = async (values: { email: string; password: string }) => {
-        console.log(values);
         try {
-            const res = await handleAPI('/auth/register', values, 'post')
-            console.log(res)
-        } catch (error) {
-            console.log(error)
+            const res: any = await handleAPI('/auth/login', values, 'post')
+            message.success(res.message)
+            res.data && dispatch(addAuth(res.data))
+
+        } catch (error: any) {
+            message.error(error.message)
         }
     };
     return (
         <>
-            <Card style={{}}>
+            <Card style={{ width: '50%' }}>
                 <div className="text-center">
                     <img className='mb-3'
                         src={'https://firebasestorage.googleapis.com/v0/b/kanban-c0323.appspot.com/o/kanban-logo.png?alt=media&token=a3e8c386-57da-49a3-b9a2-94b8fd93ff83'} alt="" style={{
