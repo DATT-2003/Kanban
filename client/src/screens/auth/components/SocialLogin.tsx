@@ -1,8 +1,11 @@
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { auth } from "../../../firebase/firebaseConfig";
+import Password from "antd/es/input/Password";
+import handleAPI from "../../../apis/handleAPI";
+import { addAuth } from "../../../redux/reducers/authReducer";
 
 const provider = new GoogleAuthProvider();
 provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
@@ -17,7 +20,26 @@ const SocialLogin = () => {
       const result = await signInWithPopup(auth, provider);
       if (result) {
         const user = result.user;
-        console.log(user);
+        if (user) {
+          const data = {
+            name: user.displayName,
+            email: user.email,
+          };
+
+          const api = `/auth/google-login`;
+
+          try {
+            const res: any = await handleAPI(api, data, "post");
+            message.success(res.message);
+
+            dispatch(addAuth(res.data));
+          } catch (error: any) {
+            console.log("error", error);
+            message.error(error.message);
+          } finally {
+            setIsLoading(false);
+          }
+        }
       } else {
         console.log("Can't login with google");
       }
