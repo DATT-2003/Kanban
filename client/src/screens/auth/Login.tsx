@@ -127,7 +127,7 @@ const Login = () => {
             Login
           </Button>
         </div>
-        <SocialLogin />
+        <SocialLogin isRemember={isRemember} />
         <div className="mt-3 text-center">
           <Space>
             <Text type="secondary">Don't have an account? </Text>

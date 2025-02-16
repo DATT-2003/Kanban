@@ -6,13 +6,18 @@ import { auth } from "../../../firebase/firebaseConfig";
 import Password from "antd/es/input/Password";
 import handleAPI from "../../../apis/handleAPI";
 import { addAuth } from "../../../redux/reducers/authReducer";
+import { LocalDataNames } from "../../../constants/appinfor";
 
 const provider = new GoogleAuthProvider();
 provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
 provider.setCustomParameters({
   login_hint: "user@example.com",
 });
-const SocialLogin = () => {
+interface Props {
+  isRemember?: boolean;
+}
+const SocialLogin = (props: Props) => {
+  const { isRemember } = props;
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const handleLoginWithGoogle = async () => {
@@ -33,6 +38,12 @@ const SocialLogin = () => {
             message.success(res.message);
 
             dispatch(addAuth(res.data));
+            if (isRemember) {
+              localStorage.setItem(
+                LocalDataNames.authData,
+                JSON.stringify(res.data)
+              );
+            }
           } catch (error: any) {
             console.log("error", error);
             message.error(error.message);
